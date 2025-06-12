@@ -6,18 +6,17 @@
   <title>Jadual SUKOL 2025</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f4f4f4;
+      font-family: sans-serif;
+      margin: 2rem;
+      background: #f0f0f0;
     }
     h1, h2 {
       text-align: center;
-      color: #333;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 40px;
+      margin-bottom: 2rem;
     }
     th, td {
       border: 1px solid #ccc;
@@ -25,61 +24,69 @@
       text-align: center;
     }
     th {
-      background-color: #5e60ce;
+      background: #333;
       color: white;
+    }
+    .section {
+      margin-bottom: 4rem;
     }
   </style>
 </head>
 <body>
   <h1>Jadual Perlawanan SUKOL 2025</h1>
 
-  <h2>Futsal</h2>
-  <table id="futsalTable">
-    <thead>
-      <tr>
-        <th>Tarikh</th><th>Masa</th><th>Pasukan A</th><th>Pasukan B</th><th>Tempat</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="section" id="futsal-section">
+    <h2>Futsal</h2>
+    <table id="futsal-table">
+      <thead>
+        <tr><th>Pasukan 1</th><th>Pasukan 2</th><th>Masa</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-  <h2>Mobile Legends</h2>
-  <table id="mlTable">
-    <thead>
-      <tr>
-        <th>Tarikh</th><th>Masa</th><th>Pasukan A</th><th>Pasukan B</th><th>Tempat</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="section" id="mlbb-section">
+    <h2>Mobile Legend</h2>
+    <table id="mlbb-table">
+      <thead>
+        <tr><th>Pasukan 1</th><th>Pasukan 2</th><th>Masa</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
-    const sheetURL = "https://api.sheetbest.com/sheets/d9144a80-af76-4d31-b0bb-7aefddec97db";
+    const sheetUrl = "https://api.sheetbest.com/sheets/d9144a80-af76-4d31-b0bb-7aefddec97db";
 
-    fetch(sheetURL)
-      .then(response => response.json())
-      .then(data => {
-        const futsalTable = document.querySelector('#futsalTable tbody');
-        const mlTable = document.querySelector('#mlTable tbody');
+    fetch(sheetUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        const futsalTable = document.querySelector("#futsal-table tbody");
+        const mlbbTable = document.querySelector("#mlbb-table tbody");
 
-        data.forEach(row => {
-          const rowHTML = `
-            <tr>
-              <td>${row.Tarikh}</td>
-              <td>${row.Masa}</td>
-              <td>${row["Pasukan A"]}</td>
-              <td>${row["Pasukan B"]}</td>
-              <td>${row.Tempat}</td>
-            </tr>
-          `;
-          
-          const sukan = row.Sukan.toLowerCase().trim();
-          if (sukan === "futsal") {
-            futsalTable.innerHTML += rowHTML;
-          } else if (sukan === "mobile legend" || sukan === "mobile legends") {
-            mlTable.innerHTML += rowHTML;
+        let hasFutsal = false;
+        let hasMLBB = false;
+
+        data.forEach((match) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${match.team1 || "-"}</td><td>${match.team2 || "-"}</td><td>${match.time || "-"}</td>`;
+
+          if (match.sport.toUpperCase() === "FUTSAL") {
+            futsalTable.appendChild(row);
+            hasFutsal = true;
+          } else if (match.sport.toUpperCase() === "MOBILE LEGEND") {
+            mlbbTable.appendChild(row);
+            hasMLBB = true;
           }
         });
+
+        if (!hasFutsal) {
+          futsalTable.innerHTML = `<tr><td colspan="3">Tiada data futsal</td></tr>`;
+        }
+
+        if (!hasMLBB) {
+          mlbbTable.innerHTML = `<tr><td colspan="3">Tiada data Mobile Legend</td></tr>`;
+        }
       });
   </script>
 </body>
