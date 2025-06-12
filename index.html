@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jadual SUKOL 2025</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #5e60ce;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jadual Perlawanan SUKOL 2025</h1>
+
+  <h2>Futsal</h2>
+  <table id="futsalTable">
+    <thead>
+      <tr>
+        <th>Tarikh</th><th>Masa</th><th>Pasukan A</th><th>Pasukan B</th><th>Tempat</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Mobile Legends</h2>
+  <table id="mlTable">
+    <thead>
+      <tr>
+        <th>Tarikh</th><th>Masa</th><th>Pasukan A</th><th>Pasukan B</th><th>Tempat</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const sheetURL = "https://api.sheetbest.com/sheets/d9144a80-af76-4d31-b0bb-7aefddec97db";
+
+    fetch(sheetURL)
+      .then(response => response.json())
+      .then(data => {
+        const futsalTable = document.querySelector('#futsalTable tbody');
+        const mlTable = document.querySelector('#mlTable tbody');
+
+        data.forEach(row => {
+          const rowHTML = `
+            <tr>
+              <td>${row.Tarikh}</td>
+              <td>${row.Masa}</td>
+              <td>${row["Pasukan A"]}</td>
+              <td>${row["Pasukan B"]}</td>
+              <td>${row.Tempat}</td>
+            </tr>
+          `;
+          
+          const sukan = row.Sukan.toLowerCase().trim();
+          if (sukan === "futsal") {
+            futsalTable.innerHTML += rowHTML;
+          } else if (sukan === "mobile legend" || sukan === "mobile legends") {
+            mlTable.innerHTML += rowHTML;
+          }
+        });
+      });
+  </script>
+</body>
+</html>
